@@ -1,12 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\SupplierController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome'); 
 });
 
 Route::get('/dashboard', function () {
@@ -19,24 +19,25 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// === ROUTE KHUSUS ADMIN === //
-Route::middleware(['auth', 'role:admin'])->group(function () {
+// ================== ADMIN ==================
+Route::middleware(['auth', 'RoleCheck:admin'])->group(function () {
     Route::resource('barang', BarangController::class);
     Route::resource('supplier', SupplierController::class);
+
     Route::get('/admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 });
 
-// === ROUTE KHUSUS KASIR === //
-Route::middleware(['auth', 'role:kasir'])->group(function () {
+// ================== KASIR ==================
+Route::middleware(['auth', 'RoleCheck:kasir'])->group(function () {
     Route::get('/kasir', function () {
         return view('kasir.dashboard');
     })->name('kasir.dashboard');
 });
 
-// === ROUTE KHUSUS SUPPLIER === //
-Route::middleware(['auth', 'role:supplier'])->group(function () {
+// ================== SUPPLIER ==================
+Route::middleware(['auth', 'RoleCheck:supplier'])->group(function () {
     Route::get('/supplier', function () {
         return view('supplier.dashboard');
     })->name('supplier.dashboard');
